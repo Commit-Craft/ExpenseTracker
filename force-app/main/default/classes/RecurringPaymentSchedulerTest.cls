@@ -17,7 +17,7 @@ private class RecurringPaymentSchedulerTest {
 
     /**
      * Common test data creation.
-     * Creates an Account used for Debit_Account__c lookup on Expense__c.
+     * Creates an Account used for Accounts__c lookup on Expense__c.
      */
     @TestSetup
     static void setupData() {
@@ -48,7 +48,7 @@ private class RecurringPaymentSchedulerTest {
         rp.Next_Billing_Date__c = nextBillingDate;
         rp.Status__c = status;
         rp.Auto_Create_Expense__c = autoCreate;
-        rp.Account__c = accountId;
+        rp.Accounts__c = accountId;
         return rp;
     }
 
@@ -90,7 +90,7 @@ private class RecurringPaymentSchedulerTest {
 
         // Assert 5 expenses created
         List<Expense__c> expenses = [
-            SELECT Id, Name, Debited_On__c, Type__c, Sub_Type__c, Debit_Amount__c, Debit_Account__c
+            SELECT Id, Name, Debited_On__c, Type__c, Sub_Type__c, Debit_Amount__c, Accounts__c
             FROM Expense__c
         ];
         System.assertEquals(5, expenses.size(), 'Exactly one Expense__c should be created for each eligible RP');
@@ -100,7 +100,7 @@ private class RecurringPaymentSchedulerTest {
         for (Expense__c e : expenses) {
             expByName.put(e.Name, e);
             System.assertEquals(today, e.Debited_On__c, 'Debited_On__c must be today');
-            System.assertNotEquals(null, e.Debit_Account__c, 'Debit_Account__c must be set from RP.Account__c');
+            System.assertNotEquals(null, e.Accounts__c, 'Accounts__c must be set from RP.Accounts__c');
         }
 
         // Reload Recurring_Payment__c to assert date advancement

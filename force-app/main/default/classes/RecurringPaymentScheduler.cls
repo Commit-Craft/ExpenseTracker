@@ -1,6 +1,6 @@
 public with sharing class RecurringPaymentScheduler Implements Schedulable {
     public void execute(SchedulableContext sc){
-        List<Recurring_Payment__c> recurringPayments = [SELECT Id, Name, Category__c,Sub_Category__c,Amount__c,Billing_Cycle__c,Next_Billing_Date__c,Account__c
+        List<Recurring_Payment__c> recurringPayments = [SELECT Id, Name, Category__c,Sub_Category__c,Amount__c,Billing_Cycle__c,Next_Billing_Date__c,Accounts__c
                                                         FROM Recurring_Payment__c 
                                                         WHERE Status__c = 'Active' 
                                                         AND Auto_Create_Expense__c = TRUE
@@ -14,7 +14,7 @@ public with sharing class RecurringPaymentScheduler Implements Schedulable {
                                                    	Type__c = recurringPayment.Category__c,
                                                     Sub_Type__c = recurringPayment.Sub_Category__c,
                                                     Debit_Amount__c = recurringPayment.Amount__c,
-                                                    Debit_Account__c = recurringPayment.Account__c
+                                                    Accounts__c = recurringPayment.Accounts__c
                                                    );
                 expenseToCreate.add(expense);
                 switch on recurringPayment.Billing_Cycle__c{
