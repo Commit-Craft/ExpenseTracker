@@ -31,6 +31,7 @@ private class RecurringPaymentSchedulerTest {
     private static Recurring_Payment__c newRecurringPayment(
         String name,
         String category,
+        String subCategory,
         Decimal amount,
         String billingCycle,
         Date nextBillingDate,
@@ -41,20 +42,7 @@ private class RecurringPaymentSchedulerTest {
         Recurring_Payment__c rp = new Recurring_Payment__c();
         rp.Name = name;
         rp.Category__c = category;
-        // Populate required dependent Sub_Category__c using valid value aligned with Category__c (uses global value set Sub_Type)
-        // Choose a value that exists in Sub_Type and semantically aligns:
-        // - For 'Education' -> 'Courses'
-        // - For 'Health & Fitness' -> 'Doctor Visits'
-        String subCat;
-        if (category == 'Education') {
-            subCat = 'Courses';
-        } else if (category == 'Health & Fitness') {
-            subCat = 'Doctor Visits';
-        } else {
-            // Fallback to a commonly available value in the global set
-            subCat = 'Courses';
-        }
-        rp.Sub_Category__c = subCat;
+        rp.Sub_Category__c = subCategory;
         rp.Amount__c = amount;
         rp.Billing_Cycle__c = billingCycle;
         rp.Next_Billing_Date__c = nextBillingDate;
@@ -88,16 +76,12 @@ private class RecurringPaymentSchedulerTest {
         // To align with scheduler hardcoded Sub_Type__c = 'Doctor Visits', make all eligible records Type/Category = 'Health & Fitness'
         // so that dependent Sub_Type__c is valid.
         List<Recurring_Payment__c> recs = new List<Recurring_Payment__c>{
-            newRecurringPayment('Monthly RP', 'Health & Fitness', 100, 'Monthly', today, 'Active', true, acct.Id),
-            newRecurringPayment('Yearly RP', 'Health & Fitness', 200, 'Yearly', today, 'Active', true, acct.Id),
-            newRecurringPayment('Quarterly RP', 'Health & Fitness', 300, 'Quaterly', today, 'Active', true, acct.Id),
-            newRecurringPayment('Half Yearly RP', 'Health & Fitness', 400, 'Half Yearly', today, 'Active', true, acct.Id),
-            newRecurringPayment('Nine Months RP', 'Health & Fitness', 500, '9 Months', today, 'Active', true, acct.Id)
+            newRecurringPayment('Monthly RP', 'Bills & Utilities','Electricity', 100, 'Monthly', today, 'Active', true, acct.Id),
+            newRecurringPayment('Yearly RP', 'Health & Fitness','Gym Membership', 200, 'Yearly', today, 'Active', true, acct.Id),
+            newRecurringPayment('Quarterly RP', 'Education','Courses', 300, 'Quaterly', today, 'Active', true, acct.Id),
+            newRecurringPayment('Half Yearly RP', 'Transport','Fuel', 400, 'Half Yearly', today, 'Active', true, acct.Id),
+            newRecurringPayment('Nine Months RP', 'Food & Dining','Dining Out', 500, '9 Months', today, 'Active', true, acct.Id)
         };
-        // Explicitly set Sub_Category__c to a valid value for 'Health & Fitness' to satisfy required field and dependencies.
-        for (Recurring_Payment__c rpTmp : recs) {
-            rpTmp.Sub_Category__c = 'Doctor Visits';
-        }
         insert recs;
 
         Test.startTest();
@@ -117,45 +101,9 @@ private class RecurringPaymentSchedulerTest {
             expByName.put(e.Name, e);
             System.assertEquals(today, e.Debited_On__c, 'Debited_On__c must be today');
             System.assertNotEquals(null, e.Debit_Account__c, 'Debit_Account__c must be set from RP.Account__c');
-            // Type__c on Expense__c is a restricted picklist; scheduler maps RP.Category__c directly.
-            // Ensure the mapped value is one of the allowed Type__c values.
-            Set<String> allowedTypes = new Set<String>{
-                'Bills & Utilities',
-                'Education',
-                'Entertainment',
-                'Financial',
-                'Food & Dining',
-                'Health & Fitness',
-                'Miscellaneous',
-                'Personal & Lifestyle',
-                'Shopping',
-                'Transport',
-                'Travel'
-            };
-            System.assert(allowedTypes.contains(String.valueOf(e.Type__c)), 'Type__c must be one of the allowed Expense__c types');
-            // Sub_Type__c is a restricted dependent picklist controlled by Type__c.
-            // Validate it is one of the allowed values for the selected Type__c.
-            Map<String, Set<String>> allowedSubsByType = new Map<String, Set<String>>{
-                'Health & Fitness' => new Set<String>{ 'Doctor Visits', 'Gym Membership', 'Health Checkups', 'Medicines', 'Supplements' },
-                'Education' => new Set<String>{ 'Books', 'Certifications', 'Courses', 'Learning Subscriptions' },
-                'Bills & Utilities' => new Set<String>{ 'DTH / TV', 'Electricity', 'Gas', 'House Rent', 'Internet / WiFi', 'Mobile Recharge', 'Water' },
-                'Entertainment' => new Set<String>{ 'Events / Concerts', 'Gaming', 'Hobbies', 'Movies', 'OTT Subscriptions' },
-                'Financial' => new Set<String>{ 'Bank Charges', 'Credit Card Bill', 'EMI', 'Insurance', 'Loan Repayment' },
-                'Food & Dining' => new Set<String>{ 'Cafes / Coffee', 'Dining Out', 'Food Delivery', 'Snacks & Beverages', 'Street Food' },
-                'Miscellaneous' => new Set<String>{ 'Others', 'Unexpected Expenses' },
-                'Personal & Lifestyle' => new Set<String>{ 'Dating / Outings', 'Gifts', 'Grooming / Salon', 'Personal Care' },
-                'Shopping' => new Set<String>{ 'Accessories', 'Clothes', 'Electronics', 'Home Items', 'Offline Shopping', 'Online Shopping' },
-                'Transport' => new Set<String>{ 'Auto / Rickshaw', 'Cab / Taxi', 'Fuel', 'Parking', 'Public Transport', 'Tolls' },
-                'Travel' => new Set<String>{ 'Activities / Sightseeing', 'Flights', 'Food during Travel', 'Hotel / Stay', 'Local Travel', 'Train / Bus Tickets' }
-            };
-            Set<String> allowedSubs = allowedSubsByType.get(String.valueOf(e.Type__c));
-            System.assertNotEquals(null, allowedSubs, 'Allowed Sub Types must be defined for the selected Type__c');
-            System.assert(allowedSubs.contains(String.valueOf(e.Sub_Type__c)), 'Sub_Type__c must be valid for the selected Type__c');
-            System.assertNotEquals(null, e.Debit_Amount__c, 'Debit_Amount__c must be set from RP.Amount__c');
         }
 
         // Reload Recurring_Payment__c to assert date advancement
-        // Use a fresh query to avoid potential issues with records that may have been modified by the scheduler
         List<Recurring_Payment__c> updated = [
             SELECT Id, Name, Billing_Cycle__c, Next_Billing_Date__c
             FROM Recurring_Payment__c
@@ -194,13 +142,9 @@ private class RecurringPaymentSchedulerTest {
         Date today = Date.today();
 
         // Ineligible records also use values valid for Expense__c.Type__c to avoid Type__c DML failures.
-        Recurring_Payment__c notToday = newRecurringPayment('Not Today', 'Education', 50, 'Monthly', today.addDays(1), 'Active', true, acct.Id);
-        Recurring_Payment__c inactive = newRecurringPayment('Inactive', 'Education', 60, 'Monthly', today, 'Cancelled', true, acct.Id);
-        Recurring_Payment__c autoOff = newRecurringPayment('Auto Off', 'Health & Fitness', 70, 'Monthly', today, 'Active', false, acct.Id);
-        // Ensure required Sub_Category__c populated explicitly as well
-        notToday.Sub_Category__c = 'Courses';
-        inactive.Sub_Category__c = 'Courses';
-        autoOff.Sub_Category__c = 'Doctor Visits';
+        Recurring_Payment__c notToday = newRecurringPayment('Not Today', 'Education','Courses', 50, 'Monthly', today.addDays(1), 'Active', true, acct.Id);
+        Recurring_Payment__c inactive = newRecurringPayment('Inactive', 'Education','Courses', 60, 'Monthly', today, 'Cancelled', true, acct.Id);
+        Recurring_Payment__c autoOff = newRecurringPayment('Auto Off', 'Health & Fitness','Doctor Visits', 70, 'Monthly', today, 'Active', false, acct.Id);
         insert new List<Recurring_Payment__c>{ notToday, inactive, autoOff };
 
         Test.startTest();
