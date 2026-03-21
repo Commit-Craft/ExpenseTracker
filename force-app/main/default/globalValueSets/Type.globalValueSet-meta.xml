@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Bills &amp; Utilities</fullName>
+        <default>false</default>
+        <label>Bills &amp; Utilities</label>
+    </customValue>
+    <customValue>
+        <fullName>Education</fullName>
+        <default>false</default>
+        <label>Education</label>
+    </customValue>
+    <customValue>
+        <fullName>Entertainment</fullName>
+        <default>false</default>
+        <label>Entertainment</label>
+    </customValue>
+    <customValue>
+        <fullName>Financial</fullName>
+        <default>false</default>
+        <label>Financial</label>
+    </customValue>
+    <customValue>
+        <fullName>Food &amp; Dining</fullName>
+        <default>false</default>
+        <label>Food &amp; Dining</label>
+    </customValue>
+    <customValue>
+        <fullName>Health &amp; Fitness</fullName>
+        <default>false</default>
+        <label>Health &amp; Fitness</label>
+    </customValue>
+    <customValue>
+        <fullName>Miscellaneous</fullName>
+        <default>false</default>
+        <label>Miscellaneous</label>
+    </customValue>
+    <customValue>
+        <fullName>Personal &amp; Lifestyle</fullName>
+        <default>false</default>
+        <label>Personal &amp; Lifestyle</label>
+    </customValue>
+    <customValue>
+        <fullName>Shopping</fullName>
+        <default>false</default>
+        <label>Shopping</label>
+    </customValue>
+    <customValue>
+        <fullName>Transport</fullName>
+        <default>false</default>
+        <label>Transport</label>
+    </customValue>
+    <customValue>
+        <fullName>Travel</fullName>
+        <default>false</default>
+        <label>Travel</label>
+    </customValue>
+    <masterLabel>Type</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

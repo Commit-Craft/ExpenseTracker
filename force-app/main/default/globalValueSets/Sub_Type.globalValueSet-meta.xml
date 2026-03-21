@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Accessories</fullName>
+        <default>false</default>
+        <label>Accessories</label>
+    </customValue>
+    <customValue>
+        <fullName>Activities / Sightseeing</fullName>
+        <default>false</default>
+        <label>Activities / Sightseeing</label>
+    </customValue>
+    <customValue>
+        <fullName>Auto / Rickshaw</fullName>
+        <default>false</default>
+        <label>Auto / Rickshaw</label>
+    </customValue>
+    <customValue>
+        <fullName>Bank Charges</fullName>
+        <default>false</default>
+        <label>Bank Charges</label>
+    </customValue>
+    <customValue>
+        <fullName>Books</fullName>
+        <default>false</default>
+        <label>Books</label>
+    </customValue>
+    <customValue>
+        <fullName>Cab / Taxi</fullName>
+        <default>false</default>
+        <label>Cab / Taxi</label>
+    </customValue>
+    <customValue>
+        <fullName>Cafes / Coffee</fullName>
+        <default>false</default>
+        <label>Cafes / Coffee</label>
+    </customValue>
+    <customValue>
+        <fullName>Certifications</fullName>
+        <default>false</default>
+        <label>Certifications</label>
+    </customValue>
+    <customValue>
+        <fullName>Clothes</fullName>
+        <default>false</default>
+        <label>Clothes</label>
+    </customValue>
+    <customValue>
+        <fullName>Courses</fullName>
+        <default>false</default>
+        <label>Courses</label>
+    </customValue>
+    <customValue>
+        <fullName>Credit Card Bill</fullName>
+        <default>false</default>
+        <label>Credit Card Bill</label>
+    </customValue>
+    <customValue>
+        <fullName>Dating / Outings</fullName>
+        <default>false</default>
+        <label>Dating / Outings</label>
+    </customValue>
+    <customValue>
+        <fullName>Dining Out</fullName>
+        <default>false</default>
+        <label>Dining Out</label>
+    </customValue>
+    <customValue>
+        <fullName>Doctor Visits</fullName>
+        <default>false</default>
+        <label>Doctor Visits</label>
+    </customValue>
+    <customValue>
+        <fullName>DTH / TV</fullName>
+        <default>false</default>
+        <label>DTH / TV</label>
+    </customValue>
+    <customValue>
+        <fullName>Electricity</fullName>
+        <default>false</default>
+        <label>Electricity</label>
+    </customValue>
+    <customValue>
+        <fullName>Electronics</fullName>
+        <default>false</default>
+        <label>Electronics</label>
+    </customValue>
+    <customValue>
+        <fullName>EMI</fullName>
+        <default>false</default>
+        <label>EMI</label>
+    </customValue>
+    <customValue>
+        <fullName>Events / Concerts</fullName>
+        <default>false</default>
+        <label>Events / Concerts</label>
+    </customValue>
+    <customValue>
+        <fullName>Flights</fullName>
+        <default>false</default>
+        <label>Flights</label>
+    </customValue>
+    <customValue>
+        <fullName>Food Delivery</fullName>
+        <default>false</default>
+        <label>Food Delivery</label>
+    </customValue>
+    <customValue>
+        <fullName>Food during Travel</fullName>
+        <default>false</default>
+        <label>Food during Travel</label>
+    </customValue>
+    <customValue>
+        <fullName>Fuel</fullName>
+        <default>false</default>
+        <label>Fuel</label>
+    </customValue>
+    <customValue>
+        <fullName>Gaming</fullName>
+        <default>false</default>
+        <label>Gaming</label>
+    </customValue>
+    <customValue>
+        <fullName>Gas</fullName>
+        <default>false</default>
+        <label>Gas</label>
+    </customValue>
+    <customValue>
+        <fullName>Gifts</fullName>
+        <default>false</default>
+        <label>Gifts</label>
+    </customValue>
+    <customValue>
+        <fullName>Groceries</fullName>
+        <default>false</default>
+        <label>Groceries</label>
+    </customValue>
+    <customValue>
+        <fullName>Grooming / Salon</fullName>
+        <default>false</default>
+        <label>Grooming / Salon</label>
+    </customValue>
+    <customValue>
+        <fullName>Gym Membership</fullName>
+        <default>false</default>
+        <label>Gym Membership</label>
+    </customValue>
+    <customValue>
+        <fullName>Health Checkups</fullName>
+        <default>false</default>
+        <label>Health Checkups</label>
+    </customValue>
+    <customValue>
+        <fullName>Hobbies</fullName>
+        <default>false</default>
+        <label>Hobbies</label>
+    </customValue>
+    <customValue>
+        <fullName>Home Items</fullName>
+        <default>false</default>
+        <label>Home Items</label>
+    </customValue>
+    <customValue>
+        <fullName>Hotel / Stay</fullName>
+        <default>false</default>
+        <label>Hotel / Stay</label>
+    </customValue>
+    <customValue>
+        <fullName>House Rent</fullName>
+        <default>false</default>
+        <label>House Rent</label>
+    </customValue>
+    <customValue>
+        <fullName>Insurance</fullName>
+        <default>false</default>
+        <label>Insurance</label>
+    </customValue>
+    <customValue>
+        <fullName>Internet / WiFi</fullName>
+        <default>false</default>
+        <label>Internet / WiFi</label>
+    </customValue>
+    <customValue>
+        <fullName>Learning Subscriptions</fullName>
+        <default>false</default>
+        <label>Learning Subscriptions</label>
+    </customValue>
+    <customValue>
+        <fullName>Loan Repayment</fullName>
+        <default>false</default>
+        <label>Loan Repayment</label>
+    </customValue>
+    <customValue>
+        <fullName>Local Travel</fullName>
+        <default>false</default>
+        <label>Local Travel</label>
+    </customValue>
+    <customValue>
+        <fullName>Medicines</fullName>
+        <default>false</default>
+        <label>Medicines</label>
+    </customValue>
+    <customValue>
+        <fullName>Mobile Recharge</fullName>
+        <default>false</default>
+        <label>Mobile Recharge</label>
+    </customValue>
+    <customValue>
+        <fullName>Movies</fullName>
+        <default>false</default>
+        <label>Movies</label>
+    </customValue>
+    <customValue>
+        <fullName>Offline Shopping</fullName>
+        <default>false</default>
+        <label>Offline Shopping</label>
+    </customValue>
+    <customValue>
+        <fullName>Online Shopping</fullName>
+        <default>false</default>
+        <label>Online Shopping</label>
+    </customValue>
+    <customValue>
+        <fullName>Others</fullName>
+        <default>false</default>
+        <label>Others</label>
+    </customValue>
+    <customValue>
+        <fullName>OTT Subscriptions</fullName>
+        <default>false</default>
+        <label>OTT Subscriptions</label>
+    </customValue>
+    <customValue>
+        <fullName>Parking</fullName>
+        <default>false</default>
+        <label>Parking</label>
+    </customValue>
+    <customValue>
+        <fullName>Personal Care</fullName>
+        <default>false</default>
+        <label>Personal Care</label>
+    </customValue>
+    <customValue>
+        <fullName>Public Transport</fullName>
+        <default>false</default>
+        <label>Public Transport</label>
+    </customValue>
+    <customValue>
+        <fullName>Snacks &amp; Beverages</fullName>
+        <default>false</default>
+        <label>Snacks &amp; Beverages</label>
+    </customValue>
+    <customValue>
+        <fullName>Street Food</fullName>
+        <default>false</default>
+        <label>Street Food</label>
+    </customValue>
+    <customValue>
+        <fullName>Supplements</fullName>
+        <default>false</default>
+        <label>Supplements</label>
+    </customValue>
+    <customValue>
+        <fullName>Tolls</fullName>
+        <default>false</default>
+        <label>Tolls</label>
+    </customValue>
+    <customValue>
+        <fullName>Train / Bus Tickets</fullName>
+        <default>false</default>
+        <label>Train / Bus Tickets</label>
+    </customValue>
+    <customValue>
+        <fullName>Unexpected Expenses</fullName>
+        <default>false</default>
+        <label>Unexpected Expenses</label>
+    </customValue>
+    <customValue>
+        <fullName>Vehicle Maintenance</fullName>
+        <default>false</default>
+        <label>Vehicle Maintenance</label>
+    </customValue>
+    <customValue>
+        <fullName>Water</fullName>
+        <default>false</default>
+        <label>Water</label>
+    </customValue>
+    <masterLabel>Sub Type</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

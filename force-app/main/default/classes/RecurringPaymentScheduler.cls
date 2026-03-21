@@ -1,0 +1,44 @@
+public with sharing class RecurringPaymentScheduler Implements Schedulable {
+    public void execute(SchedulableContext sc){
+        List<Recurring_Payment__c> recurringPayments = [SELECT Id, Name, Category__c,Amount__c,Billing_Cycle__c,Next_Billing_Date__c,Account__c
+                                                        FROM Recurring_Payment__c 
+                                                        WHERE Status__c = 'Active' 
+                                                        AND Auto_Create_Expense__c = TRUE
+                                                       ];
+        List<Expense__c> expenseToCreate = new List<Expense__c>();
+        List<Recurring_Payment__c> PaymentToUpdate = new List<Recurring_Payment__c>();
+        for(Recurring_Payment__c recurringPayment : recurringPayments){
+            if(recurringPayment.Next_Billing_Date__c == System.today()){
+                Expense__c expense = new Expense__c(Name = recurringPayment.Name,
+                                                    Debited_On__c = System.today(),
+                                                   	Type__c = recurringPayment.Category__c,
+                                                    Sub_Type__c = 'Doctor Visits',
+                                                    Debit_Amount__c = recurringPayment.Amount__c,
+                                                    Debit_Account__c = recurringPayment.Account__c
+                                                   );
+                expenseToCreate.add(expense);
+                switch on recurringPayment.Billing_Cycle__c{
+                    when 'Monthly' {
+                        recurringPayment.Next_Billing_Date__c = recurringPayment.Next_Billing_Date__c.addMonths(1);
+                    }
+                    when 'Yearly' {
+                        recurringPayment.Next_Billing_Date__c = recurringPayment.Next_Billing_Date__c.addYears(1);
+                    }
+                    when 'Quaterly' {
+                        recurringPayment.Next_Billing_Date__c = recurringPayment.Next_Billing_Date__c.addMonths(3);
+                    }
+                    when 'Half Yearly' {
+                        recurringPayment.Next_Billing_Date__c = recurringPayment.Next_Billing_Date__c.addMonths(6);
+                    }
+                    when '9 Months' {
+                        recurringPayment.Next_Billing_Date__c = recurringPayment.Next_Billing_Date__c.addMonths(9);
+                    }
+                }
+                PaymentToUpdate.add(recurringPayment);
+            }
+            update PaymentToUpdate;
+            insert expenseToCreate;
+        }
+    }
+
+}

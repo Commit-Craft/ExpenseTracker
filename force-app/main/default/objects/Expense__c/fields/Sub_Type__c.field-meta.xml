@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Sub_Type__c</fullName>
+    <label>Sub Type</label>
+    <required>true</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Type__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetName>Sub_Type</valueSetName>
+        <valueSettings>
+            <controllingFieldValue>Travel</controllingFieldValue>
+            <valueName>Activities / Sightseeing</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Travel</controllingFieldValue>
+            <valueName>Flights</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Travel</controllingFieldValue>
+            <valueName>Food during Travel</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Travel</controllingFieldValue>
+            <valueName>Hotel / Stay</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Travel</controllingFieldValue>
+            <valueName>Local Travel</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Travel</controllingFieldValue>
+            <valueName>Train / Bus Tickets</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Bills &amp; Utilities</controllingFieldValue>
+            <valueName>DTH / TV</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Bills &amp; Utilities</controllingFieldValue>
+            <valueName>Electricity</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Bills &amp; Utilities</controllingFieldValue>
+            <valueName>Gas</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Bills &amp; Utilities</controllingFieldValue>
+            <valueName>House Rent</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Bills &amp; Utilities</controllingFieldValue>
+            <valueName>Internet / WiFi</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Bills &amp; Utilities</controllingFieldValue>
+            <valueName>Mobile Recharge</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Bills &amp; Utilities</controllingFieldValue>
+            <valueName>Water</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Education</controllingFieldValue>
+            <valueName>Books</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Education</controllingFieldValue>
+            <valueName>Certifications</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Education</controllingFieldValue>
+            <valueName>Courses</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Education</controllingFieldValue>
+            <valueName>Learning Subscriptions</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Entertainment</controllingFieldValue>
+            <valueName>Events / Concerts</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Entertainment</controllingFieldValue>
+            <valueName>Gaming</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Entertainment</controllingFieldValue>
+            <valueName>Hobbies</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Entertainment</controllingFieldValue>
+            <valueName>Movies</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Entertainment</controllingFieldValue>
+            <valueName>OTT Subscriptions</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Financial</controllingFieldValue>
+            <valueName>Bank Charges</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Financial</controllingFieldValue>
+            <valueName>Credit Card Bill</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Financial</controllingFieldValue>
+            <valueName>EMI</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Financial</controllingFieldValue>
+            <valueName>Insurance</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Financial</controllingFieldValue>
+            <valueName>Loan Repayment</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Food &amp; Dining</controllingFieldValue>
+            <valueName>Cafes / Coffee</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Food &amp; Dining</controllingFieldValue>
+            <valueName>Dining Out</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Food &amp; Dining</controllingFieldValue>
+            <valueName>Food Delivery</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Food &amp; Dining</controllingFieldValue>
+            <valueName>Snacks &amp; Beverages</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Food &amp; Dining</controllingFieldValue>
+            <valueName>Street Food</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Health &amp; Fitness</controllingFieldValue>
+            <valueName>Doctor Visits</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Health &amp; Fitness</controllingFieldValue>
+            <valueName>Gym Membership</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Health &amp; Fitness</controllingFieldValue>
+            <valueName>Health Checkups</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Health &amp; Fitness</controllingFieldValue>
+            <valueName>Medicines</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Health &amp; Fitness</controllingFieldValue>
+            <valueName>Supplements</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Miscellaneous</controllingFieldValue>
+            <valueName>Others</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Miscellaneous</controllingFieldValue>
+            <valueName>Unexpected Expenses</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Personal &amp; Lifestyle</controllingFieldValue>
+            <valueName>Dating / Outings</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Personal &amp; Lifestyle</controllingFieldValue>
+            <valueName>Gifts</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Personal &amp; Lifestyle</controllingFieldValue>
+            <valueName>Grooming / Salon</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Personal &amp; Lifestyle</controllingFieldValue>
+            <valueName>Personal Care</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Shopping</controllingFieldValue>
+            <valueName>Accessories</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Shopping</controllingFieldValue>
+            <valueName>Clothes</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Shopping</controllingFieldValue>
+            <valueName>Electronics</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Shopping</controllingFieldValue>
+            <valueName>Home Items</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Shopping</controllingFieldValue>
+            <valueName>Offline Shopping</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Shopping</controllingFieldValue>
+            <valueName>Online Shopping</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Transport</controllingFieldValue>
+            <valueName>Auto / Rickshaw</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Transport</controllingFieldValue>
+            <valueName>Cab / Taxi</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Transport</controllingFieldValue>
+            <valueName>Fuel</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Transport</controllingFieldValue>
+            <valueName>Parking</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Transport</controllingFieldValue>
+            <valueName>Public Transport</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Transport</controllingFieldValue>
+            <valueName>Tolls</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>
