@@ -1,18 +1,43 @@
-# Salesforce DX Project: Next Steps
+# Expense Tracker
 
-Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
+A Salesforce application for managing expenses and recurring payments.
 
-## How Do You Plan to Deploy Your Changes?
+## Features
 
-Do you want to deploy a set of changes, or create a self-contained application? Choose a [development model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models).
+- Expense tracking
+- Recurring payment management
+- Account balance tracking
+- Flow-based automation
 
-## Configure Your Salesforce DX Project
+## Getting Started
 
-The `sfdx-project.json` file contains useful configuration information for your project. See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm) in the _Salesforce DX Developer Guide_ for details about this file.
+1. Clone this repository
+2. Deploy to your Salesforce org using Salesforce DX
+3. Configure the necessary objects and flows
 
-## Read All About It
+## Project Structure
 
-- [Salesforce Extensions Documentation](https://developer.salesforce.com/tools/vscode/)
-- [Salesforce CLI Setup Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm)
-- [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro.htm)
-- [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference.htm)
+```
+force-app/           - Main Salesforce source code
+config/              - Org configuration files
+manifest/            - Package manifest
+scripts/             - Utility scripts
+```
+
+## Deployment
+
+To deploy this project to a scratch org:
+
+```bash
+sfdx force:org:create -f config/project-scratch-def.json
+sfdx force:source:push
+sfdx force:user:permset:assign -n Expense_Tracker_Permission_Set
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
