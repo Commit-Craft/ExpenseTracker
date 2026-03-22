@@ -5,10 +5,11 @@
     <assignments>
         <name>Add_Current_Balance</name>
         <label>Add Current Balance</label>
+        <description>On create, add the approved credit amount to the account balance</description>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
-            <assignToReference>GetAccountRecords.Current_Balance__c</assignToReference>
+            <assignToReference>Get_Credit_Account.Current_Balance__c</assignToReference>
             <operator>Add</operator>
             <value>
                 <elementReference>$Record.Amount__c</elementReference>
@@ -19,19 +20,20 @@
         </connector>
     </assignments>
     <assignments>
-        <name>Get_Prior_Value</name>
-        <label>Get Prior Value</label>
+        <name>Adjust_Balance_for_Prior_Value_to_Update</name>
+        <label>Adjust Balance for Prior Value to Update</label>
+        <description>On amount change, remove the prior amount and add the new amount</description>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
-            <assignToReference>GetAccountRecords.Current_Balance__c</assignToReference>
+            <assignToReference>Get_Credit_Account.Current_Balance__c</assignToReference>
             <operator>Subtract</operator>
             <value>
                 <elementReference>$Record__Prior.Amount__c</elementReference>
             </value>
         </assignmentItems>
         <assignmentItems>
-            <assignToReference>GetAccountRecords.Current_Balance__c</assignToReference>
+            <assignToReference>Get_Credit_Account.Current_Balance__c</assignToReference>
             <operator>Add</operator>
             <value>
                 <elementReference>$Record.Amount__c</elementReference>
@@ -42,16 +44,17 @@
         </connector>
     </assignments>
     <decisions>
-        <name>Check_If_Update</name>
-        <label>Check If Update</label>
+        <name>Check_if_Amount_is_Updated</name>
+        <label>Check if Amount is Updated</label>
+        <description>Route create vs amount-changed updates; default ends with no changes</description>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>Add_Current_Balance</targetReference>
+            <targetReference>End_Default</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
-            <name>Updating_the_Balance</name>
+            <name>Amount_Updated</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>$Record.Amount__c</leftValueReference>
@@ -61,9 +64,24 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Get_Prior_Value</targetReference>
+                <targetReference>Adjust_Balance_for_Prior_Value_to_Update</targetReference>
             </connector>
-            <label>Updating the Balance</label>
+            <label>Amount Updated</label>
+        </rules>
+        <rules>
+            <name>Creating_New</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record__Prior.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Add_Current_Balance</targetReference>
+            </connector>
+            <label>Creating New</label>
         </rules>
     </decisions>
     <environments>Default</environments>
@@ -89,13 +107,14 @@
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
     <recordLookups>
-        <name>GetAccountRecords</name>
-        <label>Get Account Records</label>
+        <description>Fetch the related Accounts__c for the triggering Credit__c record.</description>
+        <name>Get_Credit_Account</name>
+        <label>Get Credit Account</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Check_If_Update</targetReference>
+            <targetReference>Check_if_Amount_is_Updated</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -112,31 +131,22 @@
     <recordUpdates>
         <name>Update_Balance</name>
         <label>Update Balance</label>
+        <description>Persist the updated account balance to Accounts__c</description>
         <locationX>0</locationX>
         <locationY>0</locationY>
-        <inputReference>GetAccountRecords</inputReference>
+        <inputReference>Get_Credit_Account</inputReference>
+        <connector>
+            <targetReference>End_After_Update</targetReference>
+        </connector>
     </recordUpdates>
     <start>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>GetAccountRecords</targetReference>
+            <targetReference>Get_Credit_Account</targetReference>
         </connector>
-        <filterLogic>1 OR (2 AND 3)</filterLogic>
-        <filters>
-            <field>Status__c</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Approved</stringValue>
-            </value>
-        </filters>
-        <filters>
-            <field>Amount__c</field>
-            <operator>IsChanged</operator>
-            <value>
-                <booleanValue>true</booleanValue>
-            </value>
-        </filters>
+        <description>Triggers on create when Approved; on update only when Amount changed and Approved</description>
+        <filterLogic>and</filterLogic>
         <filters>
             <field>Status__c</field>
             <operator>EqualTo</operator>
