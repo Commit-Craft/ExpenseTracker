@@ -3,9 +3,9 @@
     <apiVersion>66.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <assignments>
+        <description>On create, add the approved credit amount to the account balance</description>
         <name>Add_Current_Balance</name>
         <label>Add Current Balance</label>
-        <description>On create, add the approved credit amount to the account balance</description>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
@@ -20,9 +20,9 @@
         </connector>
     </assignments>
     <assignments>
+        <description>On amount change, remove the prior amount and add the new amount</description>
         <name>Adjust_Balance_for_Prior_Value_to_Update</name>
         <label>Adjust Balance for Prior Value to Update</label>
-        <description>On amount change, remove the prior amount and add the new amount</description>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
@@ -44,17 +44,24 @@
         </connector>
     </assignments>
     <decisions>
+        <description>Route create vs amount-changed updates; default ends with no changes</description>
         <name>Check_if_Amount_is_Updated</name>
         <label>Check if Amount is Updated</label>
-        <description>Route create vs amount-changed updates; default ends with no changes</description>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>Amount_Updated</name>
-            <conditionLogic>and</conditionLogic>
+            <conditionLogic>or</conditionLogic>
             <conditions>
                 <leftValueReference>$Record.Amount__c</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Status__c</leftValueReference>
                 <operator>IsChanged</operator>
                 <rightValue>
                     <booleanValue>true</booleanValue>
@@ -126,9 +133,9 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordUpdates>
+        <description>Persist the updated account balance to Accounts__c</description>
         <name>Update_Balance</name>
         <label>Update Balance</label>
-        <description>Persist the updated account balance to Accounts__c</description>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <inputReference>Get_Credit_Account</inputReference>
