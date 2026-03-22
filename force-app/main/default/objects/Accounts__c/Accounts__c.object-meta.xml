@@ -153,7 +153,7 @@
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <externalSharingModel>Private</externalSharingModel>
-    <label>Account</label>
+    <label>Accounts</label>
     <nameField>
         <label>Account Name</label>
         <trackHistory>false</trackHistory>
@@ -161,7 +161,7 @@
     </nameField>
     <pluralLabel>Accounts</pluralLabel>
     <searchLayouts></searchLayouts>
-    <sharingModel>ReadWrite</sharingModel>
+    <sharingModel>Private</sharingModel>
     <startsWith>Vowel</startsWith>
     <visibility>Public</visibility>
 </CustomObject>

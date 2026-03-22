@@ -5,6 +5,7 @@
     <description>Indicates if account is active</description>
     <inlineHelpText>Indicates whether this account is currently active for transactions.</inlineHelpText>
     <label>Active</label>
-    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
     <type>Checkbox</type>
 </CustomField>

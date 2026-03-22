@@ -5,8 +5,9 @@
     <inlineHelpText>Represents the current available balance in this account. This value is updated based on income and expense transactions.</inlineHelpText>
     <label>Current Balance</label>
     <precision>18</precision>
-    <required>false</required>
+    <required>true</required>
     <scale>2</scale>
-    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
     <type>Currency</type>
 </CustomField>
