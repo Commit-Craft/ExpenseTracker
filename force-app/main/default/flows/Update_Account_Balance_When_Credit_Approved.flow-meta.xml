@@ -49,9 +49,6 @@
         <description>Route create vs amount-changed updates; default ends with no changes</description>
         <locationX>0</locationX>
         <locationY>0</locationY>
-        <defaultConnector>
-            <targetReference>End_Default</targetReference>
-        </defaultConnector>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>Amount_Updated</name>
@@ -135,9 +132,6 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <inputReference>Get_Credit_Account</inputReference>
-        <connector>
-            <targetReference>End_After_Update</targetReference>
-        </connector>
     </recordUpdates>
     <start>
         <locationX>0</locationX>
@@ -145,7 +139,6 @@
         <connector>
             <targetReference>Get_Credit_Account</targetReference>
         </connector>
-        <description>Triggers on create when Approved; on update only when Amount changed and Approved</description>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Status__c</field>
