@@ -48,10 +48,10 @@ jobs:
           else
             echo "No Changes to Validate"
           fi
-      # - name: Deploy
-      #   run: |
-      #     if grep -q '<types>' package/package.xml; then
-      #       sf project deploy start -x package/package.xml -l NoTestRun
-      #     else
-      #       echo "No Changes to Deploy"
-      #     fi
+      - name: Deploy
+        run: |
+          if grep -q '<types>' package/package.xml; then
+            sf project deploy start -x package/package.xml -l NoTestRun
+          else
+            echo "No Changes to Deploy"
+          fi
