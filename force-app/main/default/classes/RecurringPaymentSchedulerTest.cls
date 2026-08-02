@@ -21,7 +21,7 @@ private class RecurringPaymentSchedulerTest {
      */
     @TestSetup
     static void setupData() {
-        Account a = new Account(Name = 'Test Debit Account', Current_Balance__c = 50000);
+        Accounts__c a = new Accounts__c(Name = 'Test Debit Account', Current_Balance__c = 500000, Type__c = 'Bank Account',Account_Number__c = '123456');
         insert a;
     }
 
@@ -37,7 +37,8 @@ private class RecurringPaymentSchedulerTest {
         Date nextBillingDate,
         String status,
         Boolean autoCreate,
-        Id accountId
+        Id accountId,
+        Date lastBillingDate
     ) {
         Recurring_Payment__c rp = new Recurring_Payment__c();
         rp.Name = name;
@@ -49,6 +50,7 @@ private class RecurringPaymentSchedulerTest {
         rp.Status__c = status;
         rp.Auto_Create_Expense__c = autoCreate;
         rp.Accounts__c = accountId;
+        rp.Last_Billing_Date__c = lastBillingDate;
         return rp;
     }
 
@@ -66,7 +68,8 @@ private class RecurringPaymentSchedulerTest {
      */
     @IsTest
     static void testCreatesExpensesAndAdvancesDates_ForAllBillingCycles() {
-        Account acct = [SELECT Id FROM Account LIMIT 1];
+        Accounts__c acct = [SELECT Id FROM Accounts__c LIMIT 1];
+        System.debug(acct.Id);
 
         Date today = Date.today();
 
@@ -76,11 +79,11 @@ private class RecurringPaymentSchedulerTest {
         // To align with scheduler hardcoded Sub_Type__c = 'Doctor Visits', make all eligible records Type/Category = 'Health & Fitness'
         // so that dependent Sub_Type__c is valid.
         List<Recurring_Payment__c> recs = new List<Recurring_Payment__c>{
-            newRecurringPayment('Monthly RP', 'Bills & Utilities','Electricity', 100, 'Monthly', today, 'Active', true, acct.Id),
-            newRecurringPayment('Yearly RP', 'Health & Fitness','Gym Membership', 200, 'Yearly', today, 'Active', true, acct.Id),
-            newRecurringPayment('Quarterly RP', 'Education','Courses', 300, 'Quaterly', today, 'Active', true, acct.Id),
-            newRecurringPayment('Half Yearly RP', 'Transport','Fuel', 400, 'Half Yearly', today, 'Active', true, acct.Id),
-            newRecurringPayment('Nine Months RP', 'Food & Dining','Dining Out', 500, '9 Months', today, 'Active', true, acct.Id)
+            newRecurringPayment('Monthly RP', 'Bills & Utilities','Electricity', 100, 'Monthly', today, 'Active', true, acct.Id,Date.valueOf('2029-01-01')),
+            newRecurringPayment('Yearly RP', 'Health & Fitness','Gym Membership', 200, 'Yearly', today, 'Active', true, acct.Id,Date.valueOf('2029-01-01')),
+            newRecurringPayment('Quarterly RP', 'Education','Courses', 300, 'Quaterly', today, 'Active', true, acct.Id,Date.valueOf('2029-01-01')),
+            newRecurringPayment('Half Yearly RP', 'Transport','Fuel', 400, 'Half Yearly', today, 'Active', true, acct.Id,Date.valueOf('2029-01-01')),
+            newRecurringPayment('Nine Months RP', 'Food & Dining','Dining Out', 500, '9 Months', today, 'Active', true, acct.Id,Date.valueOf('2029-01-01'))
         };
         insert recs;
 
@@ -105,7 +108,7 @@ private class RecurringPaymentSchedulerTest {
 
         // Reload Recurring_Payment__c to assert date advancement
         List<Recurring_Payment__c> updated = [
-            SELECT Id, Name, Billing_Cycle__c, Next_Billing_Date__c
+            SELECT Id, Name, Billing_Cycle__c, Next_Billing_Date__c,Last_Billing_Date__c
             FROM Recurring_Payment__c
             WHERE Id IN :recs
         ];
@@ -137,15 +140,17 @@ private class RecurringPaymentSchedulerTest {
      */
     @IsTest
     static void testNoCreation_ForIneligibleRecords() {
-        Account acct = [SELECT Id FROM Account LIMIT 1];
+        Accounts__c acct = [SELECT Id FROM Accounts__c LIMIT 1];
 
         Date today = Date.today();
 
         // Ineligible records also use values valid for Expense__c.Type__c to avoid Type__c DML failures.
-        Recurring_Payment__c notToday = newRecurringPayment('Not Today', 'Education','Courses', 50, 'Monthly', today.addDays(1), 'Active', true, acct.Id);
-        Recurring_Payment__c inactive = newRecurringPayment('Inactive', 'Education','Courses', 60, 'Monthly', today, 'Cancelled', true, acct.Id);
-        Recurring_Payment__c autoOff = newRecurringPayment('Auto Off', 'Health & Fitness','Doctor Visits', 70, 'Monthly', today, 'Active', false, acct.Id);
-        insert new List<Recurring_Payment__c>{ notToday, inactive, autoOff };
+        Recurring_Payment__c notToday = newRecurringPayment('Not Today', 'Education','Courses', 50, 'Monthly', today.addDays(1), 'Active', true, acct.Id,Date.valueOf('2029-01-01'));
+        Recurring_Payment__c inactive = newRecurringPayment('Inactive', 'Education','Courses', 60, 'Monthly', today, 'Cancelled', true, acct.Id,Date.valueOf('2029-01-01'));
+        Recurring_Payment__c autoOff = newRecurringPayment('Auto Off', 'Health & Fitness','Doctor Visits', 70, 'Monthly', today, 'Active', false, acct.Id,Date.valueOf('2029-01-01'));
+        Recurring_Payment__c pastLastBilling = newRecurringPayment('Past Last Billing Date', 'Health & Fitness','Doctor Visits', 70, 'Monthly', today, 'Active', false, acct.Id,Date.valueOf('2026-07-27'));
+        Recurring_Payment__c todayLastBilling = newRecurringPayment('Today Last Billing Date', 'Health & Fitness','Doctor Visits', 70, 'Monthly', today, 'Active', false, acct.Id,Date.valueOf('2026-07-31'));
+        insert new List<Recurring_Payment__c>{ notToday, inactive, autoOff,pastLastBilling,todayLastBilling };
 
         Test.startTest();
         runScheduler();
@@ -157,10 +162,12 @@ private class RecurringPaymentSchedulerTest {
 
         // Dates should be unchanged for all ineligible records
         Map<Id, Recurring_Payment__c> afterMap = new Map<Id, Recurring_Payment__c>([
-            SELECT Id, Next_Billing_Date__c FROM Recurring_Payment__c WHERE Id IN :new List<Id>{ notToday.Id, inactive.Id, autoOff.Id }
+            SELECT Id, Next_Billing_Date__c, Last_Billing_Date__c FROM Recurring_Payment__c WHERE Id IN :new List<Id>{ notToday.Id, inactive.Id, autoOff.Id,pastLastBilling.Id,todayLastBilling.Id }
         ]);
         System.assertEquals(today.addDays(1), afterMap.get(notToday.Id).Next_Billing_Date__c, 'Date should remain unchanged for not-today');
         System.assertEquals(today, afterMap.get(inactive.Id).Next_Billing_Date__c, 'Date should remain unchanged for non-active (Cancelled)');
         System.assertEquals(today, afterMap.get(autoOff.Id).Next_Billing_Date__c, 'Date should remain unchanged when auto-create is off');
+        System.assertEquals(today, afterMap.get(pastLastBilling.Id).Next_Billing_Date__c, 'Date should remain unchanged when last billing date is past today');
+        System.assertEquals(today, afterMap.get(todayLastBilling.Id).Next_Billing_Date__c, 'Date should remain unchanged when last billing date is today');
     }
 }

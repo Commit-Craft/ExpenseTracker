@@ -47,7 +47,7 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>Add_Current_Balance</targetReference>
+            <targetReference>Update_Balance</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -64,6 +64,21 @@
                 <targetReference>Get_Prior_Value</targetReference>
             </connector>
             <label>Updating the Balance</label>
+        </rules>
+        <rules>
+            <name>Creating_Expense</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record__Prior.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Add_Current_Balance</targetReference>
+            </connector>
+            <label>Creating Expense</label>
         </rules>
     </decisions>
     <environments>Default</environments>

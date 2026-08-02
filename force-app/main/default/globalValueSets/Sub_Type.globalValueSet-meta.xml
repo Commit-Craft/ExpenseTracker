@@ -285,6 +285,21 @@
         <default>false</default>
         <label>Water</label>
     </customValue>
+    <customValue>
+        <fullName>Salary Transfer</fullName>
+        <default>false</default>
+        <label>Salary Transfer</label>
+    </customValue>
+    <customValue>
+        <fullName>To Family</fullName>
+        <default>false</default>
+        <label>To Family</label>
+    </customValue>
+    <customValue>
+        <fullName>To Friend</fullName>
+        <default>false</default>
+        <label>To Friend</label>
+    </customValue>
     <masterLabel>Sub Type</masterLabel>
     <sorted>false</sorted>
 </GlobalValueSet>

@@ -63,13 +63,19 @@
                 <leftValueReference>GetAccountRecords.Current_Balance__c</leftValueReference>
                 <operator>GreaterThanOrEqualTo</operator>
                 <rightValue>
-                    <elementReference>$Record.Debit_Amount__c</elementReference>
+                    <elementReference>Formula_GetDifferenceIfUpdate</elementReference>
                 </rightValue>
             </conditions>
             <label>Sufficient Balance</label>
         </rules>
     </decisions>
     <environments>Default</environments>
+    <formulas>
+        <name>Formula_GetDifferenceIfUpdate</name>
+        <dataType>Currency</dataType>
+        <expression>{!$Record.Debit_Amount__c}-{!$Record__Prior.Debit_Amount__c}</expression>
+        <scale>2</scale>
+    </formulas>
     <interviewLabel>Debit Before Save Flow {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Debit Before Save Flow</label>
     <processMetadataValues>
@@ -118,6 +124,14 @@
         <connector>
             <targetReference>GetAccountRecords</targetReference>
         </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Debit_Amount__c</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
         <object>Expense__c</object>
         <recordTriggerType>CreateAndUpdate</recordTriggerType>
         <triggerType>RecordBeforeSave</triggerType>

@@ -63,6 +63,18 @@
             <valueName>Water</valueName>
         </valueSettings>
         <valueSettings>
+            <controllingFieldValue>Fund Transfer</controllingFieldValue>
+            <valueName>Salary Transfer</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Fund Transfer</controllingFieldValue>
+            <valueName>To Family</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Fund Transfer</controllingFieldValue>
+            <valueName>To Friend</valueName>
+        </valueSettings>
+        <valueSettings>
             <controllingFieldValue>Education</controllingFieldValue>
             <valueName>Books</valueName>
         </valueSettings>
@@ -129,6 +141,10 @@
         <valueSettings>
             <controllingFieldValue>Food &amp; Dining</controllingFieldValue>
             <valueName>Food Delivery</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Food &amp; Dining</controllingFieldValue>
+            <valueName>Groceries</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Food &amp; Dining</controllingFieldValue>

@@ -55,6 +55,11 @@
         <default>false</default>
         <label>Travel</label>
     </customValue>
+    <customValue>
+        <fullName>Fund Transfer</fullName>
+        <default>false</default>
+        <label>Fund Transfer</label>
+    </customValue>
     <masterLabel>Type</masterLabel>
     <sorted>false</sorted>
 </GlobalValueSet>

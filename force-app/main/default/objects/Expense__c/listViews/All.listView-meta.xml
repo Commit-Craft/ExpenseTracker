@@ -3,6 +3,7 @@
     <fullName>All</fullName>
     <columns>NAME</columns>
     <columns>Debit_Amount__c</columns>
+    <columns>Debited_On__c</columns>
     <columns>Type__c</columns>
     <filterScope>Everything</filterScope>
     <label>All</label>

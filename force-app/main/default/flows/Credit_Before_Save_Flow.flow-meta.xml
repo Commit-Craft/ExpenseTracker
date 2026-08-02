@@ -3,6 +3,16 @@
     <apiVersion>66.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <customErrors>
+        <name>Cannot_Edit_Amount_on_Credit_Record</name>
+        <label>Cannot Edit Amount on Credit Record</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <customErrorMessages>
+            <errorMessage>You cannot edit amount on Credit record.</errorMessage>
+            <isFieldError>false</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <customErrors>
         <name>Inactive_Error</name>
         <label>Inactive Error</label>
         <locationX>0</locationX>
@@ -31,7 +41,39 @@
                     <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
+            <connector>
+                <targetReference>Create_or_Update</targetReference>
+            </connector>
             <label>Active</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Create_or_Update</name>
+        <label>Create or Update</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Update</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record__Prior.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Amount__c</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Cannot_Edit_Amount_on_Credit_Record</targetReference>
+            </connector>
+            <label>Update</label>
         </rules>
     </decisions>
     <description>Flow that runs before Credit Record is saved.</description>
