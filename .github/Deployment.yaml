@@ -1,0 +1,51 @@
+name: Trigger SF Deployment on merge
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  VALIDATE_AND_DEPLOY:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Download SF CLI and SGD Git Delta
+        run: |
+          npm install @salesforce/cli -g
+          sf plugins install sfdx-git-delta
+
+      - name: Get Commits
+        run: |
+          echo "TRIGGERED_COMMIT_ID=${{github.sha}}" >> "$GITHUB_ENV"
+          echo "SOURCE_COMMIT_ID=${{github.event.before}}" >> "$GITHUB_ENV"
+      - name: Generate Package
+        run: |
+          sf sgd source delta --to $TRIGGERED_COMMIT_ID --from $SOURCE_COMMIT_ID --output-dir .
+
+      - name: Authenticate SF ORG
+        run: |
+          echo "${{secrets.SFDX_AUTH_URL}}" > authurl.txt
+          sf org login sfdx-url --sfdx-url-file authurl.txt --set-default --alias "DEVORG"
+      
+      - name: Validate
+        run: |
+          if grep -q '<types>' package/package.xml; then
+            sf project deploy start -x package/package.xml -l NoTestRun --dry-run
+          else
+            echo "No Changes to Validate"
+          fi
+      - name: Deploy
+        run: |
+          if grep -q '<types>' package/package.xml; then
+            sf project deploy start -x package/package.xml -l NoTestRun
+          else
+            echo "No Changes to Deploy"
+          fi
