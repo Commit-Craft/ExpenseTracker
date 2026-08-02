@@ -15,7 +15,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Download SF CLI and SGD Git Delta
         run: |
@@ -25,7 +25,7 @@ jobs:
       - name: Get Commits
         run: |
           echo "TRIGGERED_COMMIT_ID=${{github.sha}}" >> "$GITHUB_ENV"
-          echo "SOURCE_COMMIT_ID=${{github.event.before}}" >> "$GITHUB_ENV"
+          echo "SOURCE_COMMIT_ID=$(git log --oneline | tail -1 | grep "commit" | cut -d' ' -f 1)" >> "$GITHUB_ENV"
       - name: Generate Package
         run: |
           sf sgd source delta --to $TRIGGERED_COMMIT_ID --from $SOURCE_COMMIT_ID --output-dir .
