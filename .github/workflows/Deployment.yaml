@@ -35,6 +35,12 @@ jobs:
           echo "${{secrets.SFDX_AUTH_URL}}" > authurl.txt
           sf org login sfdx-url --sfdx-url-file authurl.txt --set-default --alias "DEVORG"
       
+      - name: Download Package.xml
+        uses: actions/upload-artifact@v4
+        with:
+          name: package
+          path: package/package.xml
+      
       - name: Validate
         run: |
           if grep -q '<types>' package/package.xml; then
