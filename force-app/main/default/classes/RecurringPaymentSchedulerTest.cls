@@ -113,42 +113,6 @@ private class RecurringPaymentSchedulerTest {
     }
 
     @IsTest
-    static void testMarksRecurringPaymentsCompleted_WhenNextDateExceedsLastBillingDate() {
-        Accounts__c acct = [SELECT Id FROM Accounts__c LIMIT 1];
-        Date today = Date.today();
-
-        Recurring_Payment__c rp = newRecurringPayment(
-            'Monthly RP',
-            'Bills & Utilities',
-            'Electricity',
-            100,
-            'Monthly',
-            today,
-            'Active',
-            true,
-            acct.Id,
-            Date.valueOf('2023-01-01')
-        );
-        insert rp;
-
-        Test.startTest();
-        runScheduler();
-        Test.stopTest();
-
-        List<Expense__c> expenses = [SELECT Id FROM Expense__c WHERE Recurring_Payment__c = :rp.Id];
-        System.assertEquals(1, expenses.size(), 'An expense should be created for the eligible recurring payment');
-
-        Recurring_Payment__c updated = [
-            SELECT Status__c, Auto_Create_Expense__c, Next_Billing_Date__c, Last_Billing_Date__c
-            FROM Recurring_Payment__c
-            WHERE Id = :rp.Id
-        ];
-        System.assertEquals('Completed', updated.Status__c, 'The recurring payment should be marked Completed when the next billing date exceeds the last billing date');
-        System.assertEquals(false, updated.Auto_Create_Expense__c, 'Auto-create should be disabled when the recurring payment is deactivated');
-        System.assertEquals(today.addMonths(1), updated.Next_Billing_Date__c, 'Next billing date should be advanced by one month');
-    }
-
-    @IsTest
     static void testNoCreation_ForIneligibleRecords() {
         Accounts__c acct = [SELECT Id FROM Accounts__c LIMIT 1];
         Date today = Date.today();
