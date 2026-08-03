@@ -1,6 +1,6 @@
 name: Trigger SF Deployment on merge
 on:
-  push:
+  pull_request:
     branches: [main]
   workflow_dispatch:
 
@@ -41,10 +41,10 @@ jobs:
           name: package
           path: package/package.xml
       
-      - name: Deploy
+      - name: Validate
         run: |
           if grep -q '<types>' package/package.xml; then
-            sf project deploy start -x package/package.xml -l NoTestRun
+            sf project deploy start -x package/package.xml -l RunSpecifiedTests --tests "RecurringPaymentSchedulerTest"
           else
-            echo "No Changes to Deploy"
+            echo "No Changes to Validate"
           fi

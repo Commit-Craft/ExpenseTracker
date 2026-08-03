@@ -1,7 +1,7 @@
 public with sharing class RecurringPaymentScheduler Implements Schedulable {
     public void execute(SchedulableContext sc){
         Date TodaysDate = System.today();
-        List<Recurring_Payment__c> recurringPayments = [SELECT Id, Name, Category__c, Sub_Category__c, Amount__c, Billing_Cycle__c, Next_Billing_Date__c, Accounts__c, Last_Billing_Date__c
+        List<Recurring_Payment__c> recurringPayments = [SELECT Id, Name, Category__c, Sub_Category__c, Amount__c, Billing_Cycle__c, Next_Billing_Date__c, Accounts__c, Last_Billing_Date__c, Status__c, Next_Billing_Date__c
                                                         FROM Recurring_Payment__c
                                                         WHERE Status__c = 'Active'
                                                         AND Auto_Create_Expense__c = TRUE
@@ -41,7 +41,6 @@ public with sharing class RecurringPaymentScheduler Implements Schedulable {
                     recurringPayment.Status__c = 'Inactive';
                     recurringPayment.Auto_Create_Expense__c = false;
                 }
-                recurringPayment.Last_Billing_Date__c = TodaysDate;
                 PaymentToUpdate.add(recurringPayment);
             }
         }
