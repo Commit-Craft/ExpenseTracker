@@ -131,7 +131,7 @@ private class RecurringPaymentSchedulerTest {
         System.assertEquals(0, expCount, 'No expenses should be created for ineligible records');
 
         Map<Id, Recurring_Payment__c> afterMap = new Map<Id, Recurring_Payment__c>([
-            SELECT Id, Next_Billing_Date__c, Last_Billing_Date__c FROM Recurring_Payment__c WHERE Id IN :new List<Id>{ notToday.Id, Completed.Id, autoOff.Id, pastLastBilling.Id, todayLastBilling.Id }
+            SELECT Id, Next_Billing_Date__c, Last_Billing_Date__c FROM Recurring_Payment__c WHERE Id IN :new List<Id>{ notToday.Id, Completed.Id, autoOff.Id, pastLastBilling.Id }
         ]);
         System.assertEquals(today.addDays(1), afterMap.get(notToday.Id).Next_Billing_Date__c, 'Date should remain unchanged for not-today');
         System.assertEquals(today, afterMap.get(Completed.Id).Next_Billing_Date__c, 'Date should remain unchanged for non-active (Cancelled)');
