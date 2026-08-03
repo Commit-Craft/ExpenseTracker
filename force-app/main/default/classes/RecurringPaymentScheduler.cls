@@ -38,7 +38,7 @@ public with sharing class RecurringPaymentScheduler Implements Schedulable {
                     }
                 }
                 if (recurringPayment.Next_Billing_Date__c > recurringPayment.Last_Billing_Date__c) {
-                    recurringPayment.Status__c = 'Inactive';
+                    recurringPayment.Status__c = 'Completed';
                     recurringPayment.Auto_Create_Expense__c = false;
                 }
                 PaymentToUpdate.add(recurringPayment);

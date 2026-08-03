@@ -6,7 +6,7 @@
  * - Scheduler runs via System.schedule within Test.startTest/stopTest
  * - Creates Expense__c for eligible Recurring_Payment__c (Next_Billing_Date__c = today, Active, Auto_Create_Expense__c = true)
  * - Advances Next_Billing_Date__c correctly for each Billing_Cycle__c value
- * - Marks recurring payments inactive when the next billing date goes past the last billing date
+ * - Marks recurring payments Completed when the next billing date goes past the last billing date
  * - Leaves ineligible records unchanged
  */
 @IsTest
@@ -101,7 +101,7 @@ private class RecurringPaymentSchedulerTest {
         System.assertEquals(today.addMonths(6), rpByName.get('Half Yearly RP').Next_Billing_Date__c, 'Half Yearly should +6 months');
         System.assertEquals(today.addMonths(9), rpByName.get('Nine Months RP').Next_Billing_Date__c, '9 Months should +9 months');
 
-        System.assertEquals('Inactive', rpByName.get('Monthly RP').Status__c, 'Monthly RP should be deactivated once the new next billing date exceeds the last billing date');
+        System.assertEquals('Completed', rpByName.get('Monthly RP').Status__c, 'Monthly RP should be Completed once the new next billing date exceeds the last billing date');
         System.assertEquals(false, rpByName.get('Monthly RP').Auto_Create_Expense__c, 'Auto-create should be turned off after deactivation');
 
         System.assert(expByName.containsKey('Monthly RP'), 'Expense for Monthly RP should exist');
@@ -112,7 +112,7 @@ private class RecurringPaymentSchedulerTest {
     }
 
     @IsTest
-    static void testMarksRecurringPaymentsInactive_WhenNextDateExceedsLastBillingDate() {
+    static void testMarksRecurringPaymentsCompleted_WhenNextDateExceedsLastBillingDate() {
         Accounts__c acct = [SELECT Id FROM Accounts__c LIMIT 1];
         Date today = Date.today();
 
@@ -142,7 +142,7 @@ private class RecurringPaymentSchedulerTest {
             FROM Recurring_Payment__c
             WHERE Id = :rp.Id
         ];
-        System.assertEquals('Inactive', updated.Status__c, 'The recurring payment should be marked inactive when the next billing date exceeds the last billing date');
+        System.assertEquals('Completed', updated.Status__c, 'The recurring payment should be marked Completed when the next billing date exceeds the last billing date');
         System.assertEquals(false, updated.Auto_Create_Expense__c, 'Auto-create should be disabled when the recurring payment is deactivated');
         System.assertEquals(today.addMonths(1), updated.Next_Billing_Date__c, 'Next billing date should be advanced by one month');
         System.assertEquals(today, updated.Last_Billing_Date__c, 'Last billing date should be updated to today');
@@ -154,11 +154,11 @@ private class RecurringPaymentSchedulerTest {
         Date today = Date.today();
 
         Recurring_Payment__c notToday = newRecurringPayment('Not Today', 'Education', 'Courses', 50, 'Monthly', today.addDays(1), 'Active', true, acct.Id, Date.valueOf('2029-01-01'));
-        Recurring_Payment__c inactive = newRecurringPayment('Inactive', 'Education', 'Courses', 60, 'Monthly', today, 'Cancelled', true, acct.Id, Date.valueOf('2029-01-01'));
+        Recurring_Payment__c Completed = newRecurringPayment('Completed', 'Education', 'Courses', 60, 'Monthly', today, 'Cancelled', true, acct.Id, Date.valueOf('2029-01-01'));
         Recurring_Payment__c autoOff = newRecurringPayment('Auto Off', 'Health & Fitness', 'Doctor Visits', 70, 'Monthly', today, 'Active', false, acct.Id, Date.valueOf('2029-01-01'));
         Recurring_Payment__c pastLastBilling = newRecurringPayment('Past Last Billing Date', 'Health & Fitness', 'Doctor Visits', 70, 'Monthly', today, 'Active', true, acct.Id, Date.valueOf('2026-07-27'));
         Recurring_Payment__c todayLastBilling = newRecurringPayment('Today Last Billing Date', 'Health & Fitness', 'Doctor Visits', 70, 'Monthly', today, 'Active', true, acct.Id, Date.valueOf('2026-07-31'));
-        insert new List<Recurring_Payment__c>{ notToday, inactive, autoOff, pastLastBilling, todayLastBilling };
+        insert new List<Recurring_Payment__c>{ notToday, Completed, autoOff, pastLastBilling, todayLastBilling };
 
         Test.startTest();
         runScheduler();
@@ -168,10 +168,10 @@ private class RecurringPaymentSchedulerTest {
         System.assertEquals(0, expCount, 'No expenses should be created for ineligible records');
 
         Map<Id, Recurring_Payment__c> afterMap = new Map<Id, Recurring_Payment__c>([
-            SELECT Id, Next_Billing_Date__c, Last_Billing_Date__c FROM Recurring_Payment__c WHERE Id IN :new List<Id>{ notToday.Id, inactive.Id, autoOff.Id, pastLastBilling.Id, todayLastBilling.Id }
+            SELECT Id, Next_Billing_Date__c, Last_Billing_Date__c FROM Recurring_Payment__c WHERE Id IN :new List<Id>{ notToday.Id, Completed.Id, autoOff.Id, pastLastBilling.Id, todayLastBilling.Id }
         ]);
         System.assertEquals(today.addDays(1), afterMap.get(notToday.Id).Next_Billing_Date__c, 'Date should remain unchanged for not-today');
-        System.assertEquals(today, afterMap.get(inactive.Id).Next_Billing_Date__c, 'Date should remain unchanged for non-active (Cancelled)');
+        System.assertEquals(today, afterMap.get(Completed.Id).Next_Billing_Date__c, 'Date should remain unchanged for non-active (Cancelled)');
         System.assertEquals(today, afterMap.get(autoOff.Id).Next_Billing_Date__c, 'Date should remain unchanged when auto-create is off');
         System.assertEquals(today, afterMap.get(pastLastBilling.Id).Next_Billing_Date__c, 'Date should remain unchanged when last billing date is past today');
         System.assertEquals(today, afterMap.get(todayLastBilling.Id).Next_Billing_Date__c, 'Date should remain unchanged when last billing date is today');
