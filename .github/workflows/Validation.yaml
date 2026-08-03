@@ -30,13 +30,18 @@ jobs:
         env:
           GH_TOKEN: ${{github.token}}
         run: |
+          set -euo pipefail
           echo "sourceCommitId=${{ github.sha }}" >> "$GITHUB_ENV"
 
           #echo "SOURCE_COMMIT_ID=$(git log --oneline | tail -1 | grep "commit" | cut -d' ' -f 1)" >> "$GITHUB_ENV"
 
-          echo "targetBranch=${{ github.base_ref }}" >> "$GITHUB_ENV"
+          targetBranch="${{ github.base_ref }}"
 
-          last_successful_commit=$(gh api repos/${{ github.repository }}/actions/workflows/Deployment.yml/runs --jq '.workflow_runs[] | select(.head_branch == "'"$targetBranch\"'") | select(.status == \"completed\") | select(.conclusion == \"success\") | .head_sha' | head -1 || true)
+          echo "targetBranch=$targetBranch" >> "$GITHUB_ENV"
+
+          llast_successful_commit=$(gh api "repos/${{ github.repository }}/actions/workflows/Deployment.yml/runs" \
+          --jq '.workflow_runs[] | select(.head_branch=="'"$targetBranch"'") | select(.status=="completed") | select(.conclusion=="success") | .head_sha' \
+          | head -1 || true)
           
           if [ -z "$last_successful_commit" ]; then
             last_successful_commit=$(git rev-parse origin/$targetBranch)
@@ -46,7 +51,7 @@ jobs:
 
       - name: Generate Package
         run: |
-          sf sgd source delta --to $last_successful_commit --from $sourceCommitId --output-dir .
+          sf sgd source delta --to $sourceCommitId --from $last_successful_commit --output-dir .
 
       - name: Authenticate SF ORG
         run: |
