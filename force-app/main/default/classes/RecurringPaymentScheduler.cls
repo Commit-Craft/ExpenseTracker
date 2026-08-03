@@ -10,7 +10,7 @@ public with sharing class RecurringPaymentScheduler Implements Schedulable {
         List<Expense__c> expenseToCreate = new List<Expense__c>();
         List<Recurring_Payment__c> PaymentToUpdate = new List<Recurring_Payment__c>();
         for(Recurring_Payment__c recurringPayment : recurringPayments){
-            if(recurringPayment.Next_Billing_Date__c == TodaysDate){
+            if(recurringPayment.Next_Billing_Date__c == TodaysDate && recurringPayment.Last_Billing_Date__c > TodaysDate){
                 Expense__c expense = new Expense__c(Name = recurringPayment.Name,
                                                     Debited_On__c = TodaysDate,
                                                     Type__c = recurringPayment.Category__c,

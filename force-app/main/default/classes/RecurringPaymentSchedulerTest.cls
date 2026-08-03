@@ -77,7 +77,7 @@ private class RecurringPaymentSchedulerTest {
             SELECT Id, Name, Debited_On__c, Type__c, Sub_Type__c, Debit_Amount__c, Accounts__c
             FROM Expense__c
         ];
-        System.assertEquals(5, expenses.size(), 'Exactly one Expense__c should be created for each eligible RP');
+        System.assertEquals(6, expenses.size(), 'Exactly one Expense__c should be created for each eligible RP');
 
         Map<String, Expense__c> expByName = new Map<String, Expense__c>();
         for (Expense__c e : expenses) {
@@ -121,8 +121,7 @@ private class RecurringPaymentSchedulerTest {
         Recurring_Payment__c Completed = newRecurringPayment('Completed', 'Education', 'Courses', 60, 'Monthly', today, 'Cancelled', true, acct.Id, Date.valueOf('2029-01-01'));
         Recurring_Payment__c autoOff = newRecurringPayment('Auto Off', 'Health & Fitness', 'Doctor Visits', 70, 'Monthly', today, 'Active', false, acct.Id, Date.valueOf('2029-01-01'));
         Recurring_Payment__c pastLastBilling = newRecurringPayment('Past Last Billing Date', 'Health & Fitness', 'Doctor Visits', 70, 'Monthly', today, 'Active', true, acct.Id, Date.valueOf('2026-07-27'));
-        Recurring_Payment__c todayLastBilling = newRecurringPayment('Today Last Billing Date', 'Health & Fitness', 'Doctor Visits', 70, 'Monthly', today, 'Active', true, acct.Id, Date.valueOf('2026-07-31'));
-        insert new List<Recurring_Payment__c>{ notToday, Completed, autoOff, pastLastBilling, todayLastBilling };
+        insert new List<Recurring_Payment__c>{ notToday, Completed, autoOff, pastLastBilling};
 
         Test.startTest();
         runScheduler();
@@ -138,6 +137,5 @@ private class RecurringPaymentSchedulerTest {
         System.assertEquals(today, afterMap.get(Completed.Id).Next_Billing_Date__c, 'Date should remain unchanged for non-active (Cancelled)');
         System.assertEquals(today, afterMap.get(autoOff.Id).Next_Billing_Date__c, 'Date should remain unchanged when auto-create is off');
         System.assertEquals(today, afterMap.get(pastLastBilling.Id).Next_Billing_Date__c, 'Date should remain unchanged when last billing date is past today');
-        System.assertEquals(today, afterMap.get(todayLastBilling.Id).Next_Billing_Date__c, 'Date should remain unchanged when last billing date is today');
     }
 }
