@@ -3,6 +3,10 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+permissions:
+  contents: read
+  pull-requests: write
+  actions: read
 
 jobs:
   VALIDATE:
@@ -23,16 +27,26 @@ jobs:
           echo y | sf plugins install sfdx-git-delta
 
       - name: Get Commits
+        env:
+          GH_TOKEN: ${{github.token}}
         run: |
           echo "sourceCommitId=${{ github.sha }}" >> "$GITHUB_ENV"
+
           #echo "SOURCE_COMMIT_ID=$(git log --oneline | tail -1 | grep "commit" | cut -d' ' -f 1)" >> "$GITHUB_ENV"
+
           echo "targetBranch=${{ github.base_ref }}" >> "$GITHUB_ENV"
-          echo "workflowId=${{ github.workflow }}" >> "$GITHUB_ENV"
-          gh_command="gh api repos/Commit-Craft/ExpenseTracker/actions/workflows/$workflowId/runs --jq '.workflow_runs[] | select(.head_branch == \"$targetBranch\") | select(.status == \"completed\") | select(.conclusion == \"success\") | .head_sha' | head -1"
-          echo "last_successful_commit=$(eval $gh_command)" >> "$GITHUB_ENV"
+
+          last_successful_commit=$(gh api "repos/${{ github.repository }}/actions/workflows/Deployment.yml/runs --jq '.workflow_runs[] | select(.head_branch == "'"$targetBranch\"'") | select(.status == \"completed\") | select(.conclusion == \"success\") | .head_sha' | head -1 || true)
+          
+          if [ -z "$last_successful_commit" ]; then
+            last_successful_commit=$(git rev-parse origin/$targetBranch)
+          fi
+
+          echo "last_successful_commit=$last_successful_commit" >> "$GITHUB_ENV"
+
       - name: Generate Package
         run: |
-          sf sgd source delta --to $sourceCommitId --from $last_successful_commit --output-dir .
+          sf sgd source delta --to $last_successful_commit --from $sourceCommitId --output-dir .
 
       - name: Authenticate SF ORG
         run: |
