@@ -1,11 +1,11 @@
-name: Trigger SF Deployment on merge
+name: Validation on Pull Request
 on:
   pull_request:
     branches: [main]
   workflow_dispatch:
 
 jobs:
-  VALIDATE_AND_DEPLOY:
+  VALIDATE:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -24,11 +24,15 @@ jobs:
 
       - name: Get Commits
         run: |
-          echo "TRIGGERED_COMMIT_ID=${{github.sha}}" >> "$GITHUB_ENV"
-          echo "SOURCE_COMMIT_ID=$(git log --oneline | tail -1 | grep "commit" | cut -d' ' -f 1)" >> "$GITHUB_ENV"
+          echo "sourceCommitId=${{ github.sha }}" >> "$GITHUB_ENV"
+          #echo "SOURCE_COMMIT_ID=$(git log --oneline | tail -1 | grep "commit" | cut -d' ' -f 1)" >> "$GITHUB_ENV"
+          echo "targetBranch=${{ github.base_ref }}" >> "$GITHUB_ENV"
+          echo "workflowId=${{ github.workflow }}" >> "$GITHUB_ENV"
+          gh_command="gh api repos/Commit-Craft/ExpenseTracker/actions/workflows/$workflowId/runs --jq '.workflow_runs[] | select(.head_branch == \"$targetBranch\") | select(.status == \"completed\") | select(.conclusion == \"success\") | .head_sha' | head -1"
+          echo "last_successful_commit=$(eval $gh_command)" >> "$GITHUB_ENV"
       - name: Generate Package
         run: |
-          sf sgd source delta --to $TRIGGERED_COMMIT_ID --from $SOURCE_COMMIT_ID --output-dir .
+          sf sgd source delta --to $sourceCommitId --from $last_successful_commit --output-dir .
 
       - name: Authenticate SF ORG
         run: |
@@ -40,7 +44,6 @@ jobs:
         with:
           name: package
           path: package/package.xml
-      
       - name: Validate
         run: |
           if grep -q '<types>' package/package.xml; then
