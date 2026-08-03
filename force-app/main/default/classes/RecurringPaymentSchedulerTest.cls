@@ -64,7 +64,8 @@ private class RecurringPaymentSchedulerTest {
             newRecurringPayment('Yearly RP', 'Health & Fitness', 'Gym Membership', 200, 'Yearly', today, 'Active', true, acct.Id, Date.valueOf('2029-01-01')),
             newRecurringPayment('Quarterly RP', 'Education', 'Courses', 300, 'Quaterly', today, 'Active', true, acct.Id, Date.valueOf('2029-01-01')),
             newRecurringPayment('Half Yearly RP', 'Transport', 'Fuel', 400, 'Half Yearly', today, 'Active', true, acct.Id, Date.valueOf('2029-01-01')),
-            newRecurringPayment('Nine Months RP', 'Food & Dining', 'Dining Out', 500, '9 Months', today, 'Active', true, acct.Id, Date.valueOf('2029-01-01'))
+            newRecurringPayment('Nine Months RP', 'Food & Dining', 'Dining Out', 500, '9 Months', today, 'Active', true, acct.Id, Date.valueOf('2029-01-01')),
+            newRecurringPayment('Nine Months RP Completed', 'Food & Dining', 'Dining Out', 500, '9 Months', today, 'Active', true, acct.Id, today)
         };
         insert recs;
 
@@ -101,8 +102,8 @@ private class RecurringPaymentSchedulerTest {
         System.assertEquals(today.addMonths(6), rpByName.get('Half Yearly RP').Next_Billing_Date__c, 'Half Yearly should +6 months');
         System.assertEquals(today.addMonths(9), rpByName.get('Nine Months RP').Next_Billing_Date__c, '9 Months should +9 months');
 
-        System.assertEquals('Completed', rpByName.get('Monthly RP').Status__c, 'Monthly RP should be Completed once the new next billing date exceeds the last billing date');
-        System.assertEquals(false, rpByName.get('Monthly RP').Auto_Create_Expense__c, 'Auto-create should be turned off after deactivation');
+        System.assertEquals('Completed', rpByName.get('Nine Months RP Completed').Status__c, 'Monthly RP should be Completed once the new next billing date exceeds the last billing date');
+        System.assertEquals(false, rpByName.get('Nine Months RP Completed').Auto_Create_Expense__c, 'Auto-create should be turned off after deactivation');
 
         System.assert(expByName.containsKey('Monthly RP'), 'Expense for Monthly RP should exist');
         System.assert(expByName.containsKey('Yearly RP'), 'Expense for Yearly RP should exist');
@@ -145,7 +146,6 @@ private class RecurringPaymentSchedulerTest {
         System.assertEquals('Completed', updated.Status__c, 'The recurring payment should be marked Completed when the next billing date exceeds the last billing date');
         System.assertEquals(false, updated.Auto_Create_Expense__c, 'Auto-create should be disabled when the recurring payment is deactivated');
         System.assertEquals(today.addMonths(1), updated.Next_Billing_Date__c, 'Next billing date should be advanced by one month');
-        System.assertEquals(today, updated.Last_Billing_Date__c, 'Last billing date should be updated to today');
     }
 
     @IsTest

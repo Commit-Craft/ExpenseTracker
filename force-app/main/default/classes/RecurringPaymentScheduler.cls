@@ -6,6 +6,7 @@ public with sharing class RecurringPaymentScheduler Implements Schedulable {
                                                         WHERE Status__c = 'Active'
                                                         AND Auto_Create_Expense__c = TRUE
                                                         AND Next_Billing_Date__c = :TodaysDate
+                                                        AND Last_Billing_Date__c > :TodaysDate
                                                        ];
         List<Expense__c> expenseToCreate = new List<Expense__c>();
         List<Recurring_Payment__c> PaymentToUpdate = new List<Recurring_Payment__c>();
