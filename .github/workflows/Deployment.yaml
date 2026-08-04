@@ -39,23 +39,18 @@ jobs:
           | head -1 || true)
 
           echo "Last Successful Commit ID 1: " $last_successful_commit
-          
+
           if [ -z "$last_successful_commit" ]; then
             last_successful_commit=$(git log --reverse --format=%H main | head -1)
           fi
 
-          echo "last_successful_commit='312684e9c8fe1f16f8806c0b6e0a8ecebb6ab8c3'" >> "$GITHUB_ENV"
-          echo "Last Successful Commit ID: " $last_successful_commit
-
-          # TEMP: remove after this run
-          last_successful_commit="312684e9c8fe1f16f8806c0b6e0a8ecebb6ab8c3"
           echo "last_successful_commit=$last_successful_commit" >> "$GITHUB_ENV"
-          echo "Last Successful Commit ID (hardcoded): " $last_successful_commit
+          echo "Last Successful Commit ID: " $last_successful_commit
 
       - name: Generate Package
         run: |
           set -euo pipefail
-          sf sgd source delta --to $last_successful_commit --from $sourceCommitId --output-dir .
+          sf sgd source delta --to $sourceCommitId --from $last_successful_commit --output-dir .
           if [ ! -f package/package.xml ]; then
             mkdir -p package
             echo '<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata"><version>67.0</version></Package>' > package/package.xml
@@ -65,13 +60,13 @@ jobs:
         run: |
           echo "${{secrets.SFDX_AUTH_URL}}" > authurl.txt
           sf org login sfdx-url --sfdx-url-file authurl.txt --set-default --alias "DEVORG"
-      
+
       - name: Download Package.xml
         uses: actions/upload-artifact@v4
         with:
           name: package
           path: package/package.xml
-      
+
       - name: Deploy
         run: |
           if grep -q '<types>' package/package.xml; then
