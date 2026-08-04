@@ -23,6 +23,7 @@ jobs:
 
       - name: Download SF CLI and SGD Git Delta
         run: |
+          set -euo pipefail
           npm install @salesforce/cli -g
           echo y | sf plugins install sfdx-git-delta
 
@@ -30,18 +31,22 @@ jobs:
         env:
           GH_TOKEN: ${{github.token}}
         run: |
+          set -euo pipefail
           echo "sourceCommitId=${{ github.sha }}" >> "$GITHUB_ENV"
 
-          echo "targetBranch=${{ github.base_ref }}" >> "$GITHUB_ENV"
+          targetBranch="${{ github.ref_name }}"
+          echo "targetBranch=$targetBranch" >> "$GITHUB_ENV"
 
-          last_successful_commit=$(gh api "repos/${{ github.repository }}/actions/workflows/Deployment.yaml/runs" \
+          workflow_file=$(echo "$GITHUB_WORKFLOW_REF" | sed 's/.*\.github\/workflows\///' | sed 's/@.*//')
+
+          last_successful_commit=$(gh api --paginate "repos/${{ github.repository }}/actions/workflows/$workflow_file/runs" \
           --jq '.workflow_runs[] | select(.head_branch=="'"$targetBranch"'") | select(.status=="completed") | select(.conclusion=="success") | .head_sha' \
           | head -1 || true)
 
           echo "Last Successful Commit ID 1: " $last_successful_commit
 
           if [ -z "$last_successful_commit" ]; then
-            last_successful_commit=$(git log --reverse --format=%H main | head -1)
+            last_successful_commit=$(git log --reverse --format=%H origin/$targetBranch | head -1)
           fi
 
           echo "last_successful_commit=$last_successful_commit" >> "$GITHUB_ENV"
@@ -58,10 +63,12 @@ jobs:
 
       - name: Authenticate SF ORG
         run: |
+          set -euo pipefail
           echo "${{secrets.SFDX_AUTH_URL}}" > authurl.txt
           sf org login sfdx-url --sfdx-url-file authurl.txt --set-default --alias "DEVORG"
+          rm -f authurl.txt
 
-      - name: Download Package.xml
+      - name: Upload Package.xml
         uses: actions/upload-artifact@v4
         with:
           name: package
@@ -70,7 +77,7 @@ jobs:
       - name: Deploy
         run: |
           if grep -q '<types>' package/package.xml; then
-            sf project deploy start -x package/package.xml -l NoTestRun
+            sf project deploy start -x package/package.xml -l RunSpecifiedTests --tests "RecurringPaymentSchedulerTest"
           else
             echo "No Changes to Deploy"
           fi
