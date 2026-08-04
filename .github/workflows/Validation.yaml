@@ -1,6 +1,6 @@
-name: Deployment on Merge
+name: Validation on Pull Request
 on:
-  push:
+  pull_request:
     branches: [main]
   workflow_dispatch:
 permissions:
@@ -9,7 +9,7 @@ permissions:
   actions: read
 
 jobs:
-  Deploy:
+  VALIDATE:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -30,22 +30,26 @@ jobs:
         env:
           GH_TOKEN: ${{github.token}}
         run: |
+          set -euo pipefail
           echo "sourceCommitId=${{ github.sha }}" >> "$GITHUB_ENV"
 
-          echo "targetBranch=${{ github.base_ref }}" >> "$GITHUB_ENV"
+          targetBranch="${{ github.base_ref }}"
 
-          last_successful_commit=$(gh api "repos/${{ github.repository }}/actions/workflows/Deployment.yml/runs --jq '.workflow_runs[] | select(.head_branch == "'"$targetBranch\"'") | select(.status == \"completed\") | select(.conclusion == \"success\") | .head_sha' | head -1 || true)
+          echo "targetBranch=$targetBranch" >> "$GITHUB_ENV"
+
+          last_successful_commit=$(gh api "repos/${{ github.repository }}/actions/workflows/Deployment.yaml/runs" \
+          --jq '.workflow_runs[] | select(.head_branch=="'"$targetBranch"'") | select(.status=="completed") | select(.conclusion=="success") | .head_sha' \
+          | head -1 || true)
           
           if [ -z "$last_successful_commit" ]; then
-            last_successful_commit=$(git log --reverse --format=%H main | head -1)
+            last_successful_commit=$(git rev-parse origin/$targetBranch)
           fi
 
           echo "last_successful_commit=$last_successful_commit" >> "$GITHUB_ENV"
 
       - name: Generate Package
         run: |
-          set -euo pipefail
-          sf sgd source delta --to $last_successful_commit --from $sourceCommitId --output-dir .
+          sf sgd source delta --to $sourceCommitId --from $last_successful_commit --output-dir .
           if [ ! -f package/package.xml ]; then
             mkdir -p package
             echo '<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata"><version>67.0</version></Package>' > package/package.xml
@@ -61,11 +65,10 @@ jobs:
         with:
           name: package
           path: package/package.xml
-      
-      - name: Deploy
+      - name: Validate
         run: |
           if grep -q '<types>' package/package.xml; then
-            sf project deploy start -x package/package.xml -l NoTestRun
+            sf project deploy start -x package/package.xml -l RunSpecifiedTests --tests "RecurringPaymentSchedulerTest"
           else
-            echo "No Changes to Deploy"
+            echo "No Changes to Validate"
           fi
