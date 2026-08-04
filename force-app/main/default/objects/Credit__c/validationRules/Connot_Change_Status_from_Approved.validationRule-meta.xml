@@ -7,5 +7,5 @@
   OR (TEXT(PRIORVALUE(Status__c)) = &quot;Approved&quot;,              TEXT(PRIORVALUE(Status__c)) = &quot;Cancelled&quot; )
 )</errorConditionFormula>
     <errorDisplayField>Status__c</errorDisplayField>
-    <errorMessage>Cannot Change the status from Approved and Cancelled. For cancelled create a new Credit Record</errorMessage>
+    <errorMessage>Status cannot be changed from Approved or Cancelled. Create a new Credit record instead.</errorMessage>
 </ValidationRule>
