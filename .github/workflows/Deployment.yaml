@@ -37,6 +37,8 @@ jobs:
           last_successful_commit=$(gh api "repos/${{ github.repository }}/actions/workflows/Deployment.yaml/runs" \
           --jq '.workflow_runs[] | select(.head_branch=="'"$targetBranch"'") | select(.status=="completed") | select(.conclusion=="success") | .head_sha' \
           | head -1 || true)
+
+          echo "Last Successful Commit ID 1: " $last_successful_commit
           
           if [ -z "$last_successful_commit" ]; then
             last_successful_commit=$(git log --reverse --format=%H main | head -1)
