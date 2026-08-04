@@ -44,7 +44,12 @@ jobs:
 
       - name: Generate Package
         run: |
+          set -euo pipefail
           sf sgd source delta --to $last_successful_commit --from $sourceCommitId --output-dir .
+          if [ ! -f package/package.xml ]; then
+            mkdir -p package
+            echo '<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata"><version>67.0</version></Package>' > package/package.xml
+          fi
 
       - name: Authenticate SF ORG
         run: |

@@ -33,13 +33,11 @@ jobs:
           set -euo pipefail
           echo "sourceCommitId=${{ github.sha }}" >> "$GITHUB_ENV"
 
-          #echo "SOURCE_COMMIT_ID=$(git log --oneline | tail -1 | grep "commit" | cut -d' ' -f 1)" >> "$GITHUB_ENV"
-
           targetBranch="${{ github.base_ref }}"
 
           echo "targetBranch=$targetBranch" >> "$GITHUB_ENV"
 
-          last_successful_commit=$(gh api "repos/${{ github.repository }}/actions/workflows/Deployment.yml/runs" \
+          last_successful_commit=$(gh api "repos/${{ github.repository }}/actions/workflows/Deployment.yaml/runs" \
           --jq '.workflow_runs[] | select(.head_branch=="'"$targetBranch"'") | select(.status=="completed") | select(.conclusion=="success") | .head_sha' \
           | head -1 || true)
           
@@ -52,6 +50,10 @@ jobs:
       - name: Generate Package
         run: |
           sf sgd source delta --to $sourceCommitId --from $last_successful_commit --output-dir .
+          if [ ! -f package/package.xml ]; then
+            mkdir -p package
+            echo '<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata"><version>67.0</version></Package>' > package/package.xml
+          fi
 
       - name: Authenticate SF ORG
         run: |
