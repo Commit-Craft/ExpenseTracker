@@ -35,8 +35,8 @@
         </rules>
     </decisions>
     <environments>Default</environments>
-    <interviewLabel>Reccuring Payment Before Save Flow {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>Reccuring Payment Before Save Flow</label>
+    <interviewLabel>Recurring Payment Before Save Flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Recurring Payment Before Save Flow</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -83,6 +83,14 @@
         <connector>
             <targetReference>Get_Account_Records</targetReference>
         </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Accounts__c</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
         <object>Recurring_Payment__c</object>
         <recordTriggerType>CreateAndUpdate</recordTriggerType>
         <triggerType>RecordBeforeSave</triggerType>

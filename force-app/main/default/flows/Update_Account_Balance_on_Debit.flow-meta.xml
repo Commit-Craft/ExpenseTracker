@@ -4,7 +4,7 @@
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <assignments>
         <name>Add_Current_Balance</name>
-        <label>Add Current Balance</label>
+        <label>Deduct From Balance</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
@@ -137,6 +137,14 @@
         <connector>
             <targetReference>GetAccountRecords</targetReference>
         </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Debit_Amount__c</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
         <object>Expense__c</object>
         <recordTriggerType>CreateAndUpdate</recordTriggerType>
         <triggerType>RecordAfterSave</triggerType>

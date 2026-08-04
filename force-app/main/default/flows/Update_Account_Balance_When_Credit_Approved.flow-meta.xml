@@ -44,34 +44,12 @@
         </connector>
     </assignments>
     <decisions>
-        <description>Route create vs amount-changed updates; default ends with no changes</description>
+        <description>Route based on trigger: new record or status change adds full amount; amount edit on existing approved record adjusts delta</description>
         <name>Check_if_Amount_is_Updated</name>
         <label>Check if Amount is Updated</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
-        <rules>
-            <name>Amount_Updated</name>
-            <conditionLogic>or</conditionLogic>
-            <conditions>
-                <leftValueReference>$Record.Amount__c</leftValueReference>
-                <operator>IsChanged</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>$Record.Status__c</leftValueReference>
-                <operator>IsChanged</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Adjust_Balance_for_Prior_Value_to_Update</targetReference>
-            </connector>
-            <label>Amount Updated</label>
-        </rules>
         <rules>
             <name>Creating_New</name>
             <conditionLogic>and</conditionLogic>
@@ -86,6 +64,36 @@
                 <targetReference>Add_Current_Balance</targetReference>
             </connector>
             <label>Creating New</label>
+        </rules>
+        <rules>
+            <name>Status_Changed_to_Approved</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status__c</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Add_Current_Balance</targetReference>
+            </connector>
+            <label>Status Changed to Approved</label>
+        </rules>
+        <rules>
+            <name>Amount_Updated</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Amount__c</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Adjust_Balance_for_Prior_Value_to_Update</targetReference>
+            </connector>
+            <label>Amount Updated</label>
         </rules>
     </decisions>
     <environments>Default</environments>

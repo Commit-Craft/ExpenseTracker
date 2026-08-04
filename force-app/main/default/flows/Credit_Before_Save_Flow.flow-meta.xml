@@ -126,6 +126,14 @@
         <connector>
             <targetReference>GetAccountRecords</targetReference>
         </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Accounts__c</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
         <object>Credit__c</object>
         <recordTriggerType>CreateAndUpdate</recordTriggerType>
         <triggerType>RecordBeforeSave</triggerType>
