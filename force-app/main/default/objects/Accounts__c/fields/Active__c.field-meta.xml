@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Active__c</fullName>
     <defaultValue>true</defaultValue>
-    <description>Indicates if account is active</description>
+    <description>Indicates if account is active.</description>
     <inlineHelpText>Indicates whether this account is currently active for transactions.</inlineHelpText>
     <label>Active</label>
     <trackHistory>false</trackHistory>
