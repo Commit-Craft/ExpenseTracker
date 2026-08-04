@@ -102,7 +102,7 @@ private class RecurringPaymentSchedulerTest {
         System.assertEquals(today.addMonths(6), rpByName.get('Half Yearly RP').Next_Billing_Date__c, 'Half Yearly should +6 months');
         System.assertEquals(today.addMonths(9), rpByName.get('Nine Months RP').Next_Billing_Date__c, '9 Months should +9 months');
 
-        System.assertEquals('Completed', rpByName.get('Nine Months RP Completed').Status__c, 'Monthly RP should be Completed once the new next billing date exceeds the last billing date');
+        System.assertEquals('Completed', rpByName.get('Nine Months RP Completed').Status__c, 'Nine Months RP Completed should be Completed once the new next billing date exceeds the last billing date');
         System.assertEquals(false, rpByName.get('Nine Months RP Completed').Auto_Create_Expense__c, 'Auto-create should be turned off after deactivation');
 
         System.assert(expByName.containsKey('Monthly RP'), 'Expense for Monthly RP should exist');
@@ -120,7 +120,7 @@ private class RecurringPaymentSchedulerTest {
         Recurring_Payment__c notToday = newRecurringPayment('Not Today', 'Education', 'Courses', 50, 'Monthly', today.addDays(1), 'Active', true, acct.Id, Date.valueOf('2029-01-01'));
         Recurring_Payment__c Completed = newRecurringPayment('Completed', 'Education', 'Courses', 60, 'Monthly', today, 'Cancelled', true, acct.Id, Date.valueOf('2029-01-01'));
         Recurring_Payment__c autoOff = newRecurringPayment('Auto Off', 'Health & Fitness', 'Doctor Visits', 70, 'Monthly', today, 'Active', false, acct.Id, Date.valueOf('2029-01-01'));
-        Recurring_Payment__c pastLastBilling = newRecurringPayment('Past Last Billing Date', 'Health & Fitness', 'Doctor Visits', 70, 'Monthly', today, 'Active', true, acct.Id, Date.valueOf('2026-07-27'));
+        Recurring_Payment__c pastLastBilling = newRecurringPayment('Past Last Billing Date', 'Health & Fitness', 'Doctor Visits', 70, 'Monthly', today, 'Active', true, acct.Id, today.addDays(-1));
         insert new List<Recurring_Payment__c>{ notToday, Completed, autoOff, pastLastBilling};
 
         Test.startTest();

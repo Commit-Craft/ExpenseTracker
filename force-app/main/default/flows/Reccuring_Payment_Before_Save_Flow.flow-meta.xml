@@ -3,6 +3,16 @@
     <apiVersion>66.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <customErrors>
+        <name>Account_Not_Found</name>
+        <label>Account Not Found</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <customErrorMessages>
+            <errorMessage>Account not found. Select a valid Account.</errorMessage>
+            <isFieldError>false</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <customErrors>
         <name>Inactive_Error</name>
         <label>Inactive Error</label>
         <locationX>0</locationX>
@@ -12,6 +22,31 @@
             <isFieldError>false</isFieldError>
         </customErrorMessages>
     </customErrors>
+    <decisions>
+        <name>Check_If_Account_Exists</name>
+        <label>Check If Account Exists</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Account_Not_Found</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Account_Found</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Account_Records.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Check_If_Account_is_Active</targetReference>
+            </connector>
+            <label>Account Found</label>
+        </rules>
+    </decisions>
     <decisions>
         <name>Check_If_Account_is_Active</name>
         <label>Check If Account is Active</label>
@@ -35,8 +70,8 @@
         </rules>
     </decisions>
     <environments>Default</environments>
-    <interviewLabel>Reccuring Payment Before Save Flow {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>Reccuring Payment Before Save Flow</label>
+    <interviewLabel>Recurring Payment Before Save Flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Recurring Payment Before Save Flow</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -63,7 +98,7 @@
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Check_If_Account_is_Active</targetReference>
+            <targetReference>Check_If_Account_Exists</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -83,6 +118,14 @@
         <connector>
             <targetReference>Get_Account_Records</targetReference>
         </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Accounts__c</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
         <object>Recurring_Payment__c</object>
         <recordTriggerType>CreateAndUpdate</recordTriggerType>
         <triggerType>RecordBeforeSave</triggerType>
