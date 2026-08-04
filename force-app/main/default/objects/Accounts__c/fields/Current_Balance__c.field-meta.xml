@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Current_Balance__c</fullName>
-    <description>Current balance in the account</description>
+    <description>Current balance in the account.</description>
     <inlineHelpText>Represents the current available balance in this account. This value is updated based on income and expense transactions.</inlineHelpText>
     <label>Current Balance</label>
     <precision>18</precision>
