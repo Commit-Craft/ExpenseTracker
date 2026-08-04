@@ -43,6 +43,7 @@ jobs:
           fi
 
           echo "last_successful_commit=$last_successful_commit" >> "$GITHUB_ENV"
+          echo "Last Successful Commit ID: " $last_successful_commit
 
       - name: Generate Package
         run: |
