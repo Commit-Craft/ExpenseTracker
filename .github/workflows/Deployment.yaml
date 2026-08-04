@@ -47,6 +47,11 @@ jobs:
           echo "last_successful_commit='312684e9c8fe1f16f8806c0b6e0a8ecebb6ab8c3'" >> "$GITHUB_ENV"
           echo "Last Successful Commit ID: " $last_successful_commit
 
+          # TEMP: remove after this run
+          last_successful_commit="312684e9c8fe1f16f8806c0b6e0a8ecebb6ab8c3"
+          echo "last_successful_commit=$last_successful_commit" >> "$GITHUB_ENV"
+          echo "Last Successful Commit ID (hardcoded): " $last_successful_commit
+
       - name: Generate Package
         run: |
           set -euo pipefail
