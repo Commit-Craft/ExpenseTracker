@@ -46,9 +46,6 @@
         <label>Check If Update</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
-        <defaultConnector>
-            <targetReference>Update_Balance</targetReference>
-        </defaultConnector>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>Creating_Expense</name>
@@ -137,14 +134,6 @@
         <connector>
             <targetReference>GetAccountRecords</targetReference>
         </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>Debit_Amount__c</field>
-            <operator>IsChanged</operator>
-            <value>
-                <booleanValue>true</booleanValue>
-            </value>
-        </filters>
         <object>Expense__c</object>
         <recordTriggerType>CreateAndUpdate</recordTriggerType>
         <triggerType>RecordAfterSave</triggerType>
