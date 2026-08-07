@@ -142,8 +142,8 @@
     </actionOverrides>
     <allowInChatterGroups>true</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
-    <description>Represents a financial account (e.g. bank account, credit card, cash wallet) used to track income and expense transactions in the Expense Tracker app.</description>
     <deploymentStatus>Deployed</deploymentStatus>
+    <description>Represents a financial account (e.g. bank account, credit card, cash wallet) used to track income and expense transactions in the Expense Tracker app.</description>
     <enableActivities>true</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>

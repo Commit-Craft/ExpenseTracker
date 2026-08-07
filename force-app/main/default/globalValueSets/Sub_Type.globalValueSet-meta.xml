@@ -300,6 +300,11 @@
         <default>false</default>
         <label>To Friend</label>
     </customValue>
+    <customValue>
+        <fullName>Office</fullName>
+        <default>false</default>
+        <label>Office</label>
+    </customValue>
     <masterLabel>Sub Type</masterLabel>
     <sorted>false</sorted>
 </GlobalValueSet>
